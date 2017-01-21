@@ -23,6 +23,9 @@ private:
 	/** Viewport Size */
 	FVector2D ViewportSize;
 
+	/** Player state (moving, battle and death state */
+	int iState;
+
 	/** Look at mouse position*/
 	void lookAt();
 
@@ -43,6 +46,8 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End of APawn interface
 
+	/** Called to switch states (current space bar) */
+	void Switch();
 
 public:
 	AWavesCharacter();

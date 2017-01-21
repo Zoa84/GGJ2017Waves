@@ -6,6 +6,10 @@
 #define TO_RADIANS	3.14159 / 180
 #define TO_DEGREES	180 / 3.14159
 
+#define STATE_MOVING	0
+#define STATE_BATTLE	1
+#define STATE_DEATH		2
+
 AWavesCharacter::AWavesCharacter()
 {
 	// Set size for collision capsule
@@ -45,7 +49,7 @@ AWavesCharacter::AWavesCharacter()
 
 
 
-
+	iState = STATE_MOVING;
 	//Try to show mouse
 	//PlayerController->bShowMouseCursor = true;
 	//PlayerController->bEnableClickEvents = true;
@@ -68,8 +72,11 @@ void AWavesCharacter::SetupPlayerInputComponent(class UInputComponent* InputComp
 
 void AWavesCharacter::MoveRight(float Value)
 {
-	//add movement in that direction
-	AddMovementInput(FVector(0.f,-1.f,0.f), Value);
+	if (iState == STATE_MOVING)
+	{
+		//add movement in that direction
+		AddMovementInput(FVector(0.f, -1.f, 0.f), Value);
+	}
 }
 
 void AWavesCharacter::TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location)
@@ -89,7 +96,18 @@ void AWavesCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	//UE_LOG(LogTemp, Warning, TEXT("Tick!"));
 
-	lookAt();
+	if (iState == STATE_MOVING)
+	{
+		
+	}
+	else if (iState == STATE_BATTLE)
+	{
+		lookAt();
+	}
+	else if (iState == STATE_DEATH)
+	{
+
+	}
 }
 
 //Look at mouse position
@@ -113,5 +131,14 @@ void AWavesCharacter::lookAt()
 		FVector LocalPos = FVector(MousePosition.X - (ViewportSize.X / 2), MousePosition.Y - (ViewportSize.Y / 2), 0.f);
 		fAngle = (LocalPos.HeadingAngle() * TO_DEGREES) + 270.f;
 		this->SetActorRotation(FRotator(0.f, fAngle, 0.f));
+	}
+}
+
+void AWavesCharacter::Switch()
+{
+	iState++;
+	if (iState > STATE_DEATH)
+	{
+		iState = STATE_MOVING;
 	}
 }
