@@ -50,6 +50,9 @@ AWavesCharacter::AWavesCharacter()
 
 
 	iState = STATE_MOVING;
+	bWeapon1 = false;
+	bWeapon2 = false;
+	bWeapon3 = false;
 	//Try to show mouse
 	//PlayerController->bShowMouseCursor = true;
 	//PlayerController->bEnableClickEvents = true;
@@ -65,11 +68,18 @@ void AWavesCharacter::SetupPlayerInputComponent(class UInputComponent* InputComp
 	//InputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	//InputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	InputComponent->BindAxis("MoveRight", this, &AWavesCharacter::MoveRight);
-
 	InputComponent->BindTouch(IE_Pressed, this, &AWavesCharacter::TouchStarted);
 	InputComponent->BindTouch(IE_Released, this, &AWavesCharacter::TouchStopped);
-
 	InputComponent->BindAction("Switch", IE_Pressed, this, &AWavesCharacter::Switch);
+	
+	InputComponent->BindAction("Shoot", IE_Pressed, this, &AWavesCharacter::Shoot);
+	//InputComponent->BindAction("SubShoot", IE_Pressed, this, &AWavesCharacter::);
+	InputComponent->BindAction("Weapon1", IE_Pressed, this, &AWavesCharacter::Weapon1On);
+	InputComponent->BindAction("Weapon2", IE_Pressed, this, &AWavesCharacter::Weapon2On);
+	InputComponent->BindAction("Weapon3", IE_Pressed, this, &AWavesCharacter::Weapon3On);
+	InputComponent->BindAction("Weapon1", IE_Released, this, &AWavesCharacter::Weapon1Off);
+	InputComponent->BindAction("Weapon2", IE_Released, this, &AWavesCharacter::Weapon2Off);
+	InputComponent->BindAction("Weapon3", IE_Released, this, &AWavesCharacter::Weapon3Off);
 }
 
 void AWavesCharacter::MoveRight(float Value)
@@ -143,5 +153,35 @@ void AWavesCharacter::Switch()
 	{
 		iState = STATE_MOVING;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("HMM"));
+	UE_LOG(LogTemp, Warning, TEXT("State: %i"), iState);
+}
+
+void AWavesCharacter::Shoot()
+{
+	if (iState == STATE_BATTLE)
+	{
+		if (bWeapon1)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Weapon 1"));
+		}
+		else if (bWeapon2)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Weapon 2"));
+		}
+		else if (bWeapon3)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Weapon 3"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("No Weapon"));
+		}
+		//Shoot a projectile
+		//Get a projectile, and pass the angle of the player
+		//So the projectile can shoot in that angle
+		//Also pass the current weapon selected
+		//Then reset weapon states
+
+		//Later on, can mix multiple weapons
+	}
 }
