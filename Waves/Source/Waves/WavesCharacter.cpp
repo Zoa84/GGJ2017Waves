@@ -47,8 +47,8 @@ AWavesCharacter::AWavesCharacter()
 void AWavesCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 {
 	// set up gameplay key bindings
-	InputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	InputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	//InputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	//InputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	InputComponent->BindAxis("MoveRight", this, &AWavesCharacter::MoveRight);
 
 	InputComponent->BindTouch(IE_Pressed, this, &AWavesCharacter::TouchStarted);
