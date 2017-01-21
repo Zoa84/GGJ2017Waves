@@ -26,10 +26,13 @@ private:
 	/** Player state (moving, battle and death state */
 	int iState;
 
+	/** Weapon states */
+	bool bWeapon1;
+	bool bWeapon2;
+	bool bWeapon3;
+
 	/** Look at mouse position*/
 	void LookAt();
-
-
 
 protected:
 
@@ -48,6 +51,19 @@ protected:
 
 	/** Called to switch states (current space bar) */
 	void Switch();
+
+	/** Shooting function */
+	void Shoot();
+
+	/** Weapon Activation */
+	void Weapon1On() { bWeapon1 = true; };
+	void Weapon2On() { bWeapon2 = true; };
+	void Weapon3On() { bWeapon3 = true; };
+
+	/** Weapon Deactivation */
+	void Weapon1Off() { bWeapon1 = false; };
+	void Weapon2Off() { bWeapon2 = false; };
+	void Weapon3Off() { bWeapon3 = false; };
 
 public:
 	AWavesCharacter();
