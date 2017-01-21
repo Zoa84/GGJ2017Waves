@@ -27,7 +27,7 @@ private:
 	int iState;
 
 	/** Look at mouse position*/
-	void lookAt();
+	void LookAt();
 
 
 

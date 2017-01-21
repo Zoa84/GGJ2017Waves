@@ -68,6 +68,8 @@ void AWavesCharacter::SetupPlayerInputComponent(class UInputComponent* InputComp
 
 	InputComponent->BindTouch(IE_Pressed, this, &AWavesCharacter::TouchStarted);
 	InputComponent->BindTouch(IE_Released, this, &AWavesCharacter::TouchStopped);
+
+	InputComponent->BindAction("Switch", IE_Pressed, this, &AWavesCharacter::Switch);
 }
 
 void AWavesCharacter::MoveRight(float Value)
@@ -102,7 +104,7 @@ void AWavesCharacter::Tick(float DeltaTime)
 	}
 	else if (iState == STATE_BATTLE)
 	{
-		lookAt();
+		LookAt();
 	}
 	else if (iState == STATE_DEATH)
 	{
@@ -111,7 +113,7 @@ void AWavesCharacter::Tick(float DeltaTime)
 }
 
 //Look at mouse position
-void AWavesCharacter::lookAt()
+void AWavesCharacter::LookAt()
 {
 	//Set Viewport Size
 	ViewportSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY());
@@ -141,4 +143,5 @@ void AWavesCharacter::Switch()
 	{
 		iState = STATE_MOVING;
 	}
+	UE_LOG(LogTemp, Warning, TEXT("HMM"));
 }
