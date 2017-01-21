@@ -55,6 +55,9 @@ protected:
 	/** Shooting function */
 	void Shoot();
 
+	/** Sub Weapon Shooting function */
+	void SubShoot();
+
 	/** Weapon Activation */
 	void Weapon1On() { bWeapon1 = true; };
 	void Weapon2On() { bWeapon2 = true; };

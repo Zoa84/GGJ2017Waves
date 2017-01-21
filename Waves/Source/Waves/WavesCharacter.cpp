@@ -73,7 +73,7 @@ void AWavesCharacter::SetupPlayerInputComponent(class UInputComponent* InputComp
 	InputComponent->BindAction("Switch", IE_Pressed, this, &AWavesCharacter::Switch);
 	
 	InputComponent->BindAction("Shoot", IE_Pressed, this, &AWavesCharacter::Shoot);
-	//InputComponent->BindAction("SubShoot", IE_Pressed, this, &AWavesCharacter::);
+	InputComponent->BindAction("SubShoot", IE_Pressed, this, &AWavesCharacter::SubShoot);
 	InputComponent->BindAction("Weapon1", IE_Pressed, this, &AWavesCharacter::Weapon1On);
 	InputComponent->BindAction("Weapon2", IE_Pressed, this, &AWavesCharacter::Weapon2On);
 	InputComponent->BindAction("Weapon3", IE_Pressed, this, &AWavesCharacter::Weapon3On);
@@ -184,4 +184,9 @@ void AWavesCharacter::Shoot()
 
 		//Later on, can mix multiple weapons
 	}
+}
+
+void AWavesCharacter::SubShoot()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Sub Weapon"));
 }
