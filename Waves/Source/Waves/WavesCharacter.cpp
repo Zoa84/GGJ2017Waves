@@ -3,6 +3,9 @@
 #include "Waves.h"
 #include "WavesCharacter.h"
 
+#define TO_RADIANS	3.14159 / 180
+#define TO_DEGREES	180 / 3.14159
+
 AWavesCharacter::AWavesCharacter()
 {
 	// Set size for collision capsule
@@ -39,6 +42,12 @@ AWavesCharacter::AWavesCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+
+
+	//Try to show mouse
+	//PlayerController->bShowMouseCursor = true;
+	//PlayerController->bEnableClickEvents = true;
+	//PlayerController->bEnableMouseOverEvents = true;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -59,6 +68,43 @@ void AWavesCharacter::MoveRight(float Value)
 {
 	// add movement in that direction
 	AddMovementInput(FVector(0.f,-1.f,0.f), Value);
+
+	//Look at mouse position
+
+	//Viewport Size
+	const FVector2D ViewportSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY());
+	//Viewport Center!            
+	const FVector2D  ViewportCenter = FVector2D(ViewportSize.X / 2, ViewportSize.Y / 2);
+
+	//Mouse positions
+	float x;
+	float y;
+
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	PlayerController->GetMousePosition(x, y);
+
+	FVector2D MousePosition(x, y);
+
+	if ((MousePosition.X < 0) || (MousePosition.Y < 0) || (MousePosition.X > ViewportSize.X) || (MousePosition.Y > ViewportSize.Y))
+	{
+
+	}
+	else
+	{
+
+		FVector2D LocalPos(MousePosition.X - ViewportCenter.X, MousePosition.Y - ViewportCenter.Y);
+
+		//UE_LOG(LogTemp, Warning, TEXT("X: %f Y: %f"), ViewportSize.X, ViewportSize.Y);
+		//UE_LOG(LogTemp, Warning, TEXT("X: %f Y: %f"), LocalPos.X, LocalPos.Y);
+
+		FVector testing = FVector(LocalPos, 0.f);
+		float test = (testing.HeadingAngle() * TO_DEGREES) + 180.f;
+		UE_LOG(LogTemp, Warning, TEXT("Angle: %f"), test);
+
+		FRotator kill = FRotator(0.f, test + 90.f, 0.f);
+
+		this->SetActorRotation(kill);
+	}
 }
 
 void AWavesCharacter::TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location)

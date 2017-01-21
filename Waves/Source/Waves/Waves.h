@@ -3,6 +3,6 @@
 #ifndef __WAVES_H__
 #define __WAVES_H__
 
-#include "EngineMinimal.h"
+#include "Engine.h"
 				   
 #endif
