@@ -44,6 +44,8 @@ AWavesCharacter::AWavesCharacter()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
 
+
+
 	//Try to show mouse
 	//PlayerController->bShowMouseCursor = true;
 	//PlayerController->bEnableClickEvents = true;
@@ -66,45 +68,8 @@ void AWavesCharacter::SetupPlayerInputComponent(class UInputComponent* InputComp
 
 void AWavesCharacter::MoveRight(float Value)
 {
-	// add movement in that direction
+	//add movement in that direction
 	AddMovementInput(FVector(0.f,-1.f,0.f), Value);
-
-	//Look at mouse position
-
-	//Viewport Size
-	const FVector2D ViewportSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY());
-	//Viewport Center!            
-	const FVector2D  ViewportCenter = FVector2D(ViewportSize.X / 2, ViewportSize.Y / 2);
-
-	//Mouse positions
-	float x;
-	float y;
-
-	APlayerController* PlayerController = Cast<APlayerController>(GetController());
-	PlayerController->GetMousePosition(x, y);
-
-	FVector2D MousePosition(x, y);
-
-	if ((MousePosition.X < 0) || (MousePosition.Y < 0) || (MousePosition.X > ViewportSize.X) || (MousePosition.Y > ViewportSize.Y))
-	{
-
-	}
-	else
-	{
-
-		FVector2D LocalPos(MousePosition.X - ViewportCenter.X, MousePosition.Y - ViewportCenter.Y);
-
-		//UE_LOG(LogTemp, Warning, TEXT("X: %f Y: %f"), ViewportSize.X, ViewportSize.Y);
-		//UE_LOG(LogTemp, Warning, TEXT("X: %f Y: %f"), LocalPos.X, LocalPos.Y);
-
-		FVector testing = FVector(LocalPos, 0.f);
-		float test = (testing.HeadingAngle() * TO_DEGREES) + 180.f;
-		UE_LOG(LogTemp, Warning, TEXT("Angle: %f"), test);
-
-		FRotator kill = FRotator(0.f, test + 90.f, 0.f);
-
-		this->SetActorRotation(kill);
-	}
 }
 
 void AWavesCharacter::TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location)
@@ -118,3 +83,35 @@ void AWavesCharacter::TouchStopped(const ETouchIndex::Type FingerIndex, const FV
 	StopJumping();
 }
 
+// Called every frame
+void AWavesCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	//UE_LOG(LogTemp, Warning, TEXT("Tick!"));
+
+	lookAt();
+}
+
+//Look at mouse position
+void AWavesCharacter::lookAt()
+{
+	//Set Viewport Size
+	ViewportSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY());
+
+	//Mouse positions
+	FVector2D MousePosition;
+
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	PlayerController->GetMousePosition(MousePosition.X, MousePosition.Y);
+
+	if ((MousePosition.X < 0) || (MousePosition.Y < 0) || (MousePosition.X > ViewportSize.X) || (MousePosition.Y > ViewportSize.Y))
+	{
+		/** If outside bounds of screen, do not update player rotation */
+	}
+	else
+	{
+		FVector LocalPos = FVector(MousePosition.X - (ViewportSize.X / 2), MousePosition.Y - (ViewportSize.Y / 2), 0.f);
+		fAngle = (LocalPos.HeadingAngle() * TO_DEGREES) + 270.f;
+		this->SetActorRotation(FRotator(0.f, fAngle, 0.f));
+	}
+}

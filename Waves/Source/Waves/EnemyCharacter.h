@@ -25,4 +25,6 @@ private:
 	//! Calculate heading for moving towards specified position
 	FVector calcHeading(FVector target);
 	
+	//! Speed of actor (as a multiplier)
+	float fSpeed;
 };

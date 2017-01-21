@@ -16,6 +16,18 @@ class AWavesCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
 
+private:
+	/** Angle the player is facing */
+	float fAngle;
+
+	/** Viewport Size */
+	FVector2D ViewportSize;
+
+	/** Look at mouse position*/
+	void lookAt();
+
+
+
 protected:
 
 	/** Called for side to side input */
@@ -34,6 +46,9 @@ protected:
 
 public:
 	AWavesCharacter();
+
+	// Called every frame
+	virtual void Tick(float DeltaSeconds) override;
 
 	/** Returns SideViewCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }

@@ -3,12 +3,17 @@
 #include "Waves.h"
 #include "EnemyCharacter.h"
 
+#define TO_RADIANS	3.14159 / 180
+#define TO_DEGREES	180 / 3.14159
+
 
 // Sets default values
 AEnemyCharacter::AEnemyCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	fSpeed = 0.5f;
 
 }
 
@@ -28,7 +33,12 @@ void AEnemyCharacter::Tick( float DeltaTime )
 	FVector vPlayerLoc = playerCharacter->GetActorLocation();	
 	
 	FVector vHeading = calcHeading(vPlayerLoc);	//Get heading towards player
-	AddMovementInput(vHeading);			//Moves towards players position
+	AddMovementInput(vHeading * fSpeed);		//Moves towards players position
+
+	vHeading = FVector(vHeading.X, vHeading.Y, 0.f);
+	float fAngle = vHeading.HeadingAngle() * TO_DEGREES;
+	//UE_LOG(LogTemp, Warning, TEXT("Angle: %f"), fAngle);
+	this->SetActorRotation(FRotator(0.f, fAngle, 0.f));
 }
 
 // Called to bind functionality to input
