@@ -9,7 +9,6 @@ UCLASS()
 class WAVES_API AEnemyCharacter : public ACharacter
 {
 	GENERATED_BODY()
-
 public:
 	// Sets default values for this character's properties
 	AEnemyCharacter();
@@ -22,7 +21,8 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
-
-	
+private:
+	//! Calculate heading for moving towards specified position
+	FVector calcHeading(FVector target);
 	
 };
