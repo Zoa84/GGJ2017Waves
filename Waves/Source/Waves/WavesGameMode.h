@@ -11,6 +11,3 @@ class AWavesGameMode : public AGameMode
 public:
 	AWavesGameMode();
 };
-
-
-
