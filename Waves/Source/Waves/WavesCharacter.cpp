@@ -7,7 +7,6 @@
 #define TO_RADIANS	3.14159 / 180
 #define TO_DEGREES	180 / 3.14159
 
-#define STATE_MOVING	0
 #define STATE_BATTLE	1
 #define STATE_DEATH		2
 
@@ -50,7 +49,7 @@ AWavesCharacter::AWavesCharacter()
 
 
 
-	iState = STATE_MOVING;
+	iState = STATE_BATTLE;
 	bWeapon1 = false;
 	bWeapon2 = false;
 	bWeapon3 = false;
@@ -86,11 +85,11 @@ void AWavesCharacter::SetupPlayerInputComponent(class UInputComponent* InputComp
 
 void AWavesCharacter::MoveRight(float Value)
 {
-	if (iState == STATE_MOVING)
+	/*if (iState == STATE_MOVING)
 	{
 		//add movement in that direction
 		AddMovementInput(FVector(0.f, -1.f, 0.f), Value);
-	}
+	}*/
 }
 
 void AWavesCharacter::TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location)
@@ -110,11 +109,11 @@ void AWavesCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	//UE_LOG(LogTemp, Warning, TEXT("Tick!"));
 
-	if (iState == STATE_MOVING)
+	/*if (iState == STATE_MOVING)
 	{
 		
 	}
-	else if (iState == STATE_BATTLE)
+	else */if (iState == STATE_BATTLE)
 	{
 		LookAt();
 	}
@@ -154,61 +153,45 @@ void AWavesCharacter::Switch()
 	iState++;
 	if (iState > STATE_DEATH)
 	{
-		iState = STATE_MOVING;
+		iState = STATE_BATTLE;
 	}
 	UE_LOG(LogTemp, Warning, TEXT("State: %i"), iState);
 }
 
 void AWavesCharacter::Shoot()
 {
-	if (Bullet != NULL) {
-		UWorld* const World = GetWorld();
-
-		if ((World) && (iDelay<=0)) {
-
-			FActorSpawnParameters spawnParams;
-			spawnParams.Owner = this;
-			spawnParams.Instigator = Instigator;
-
-			FVector vLocation = this->GetActorLocation() + FVector(0.f, 0.f, 0.f);
-
-			FRotator rotation;
-			rotation.Yaw = 0.0f;
-			rotation.Pitch = 0.0f;
-			rotation.Roll = 0.0f;
-
-			ABullet_Pawn* const Spawned = World->SpawnActor<ABullet_Pawn>(Bullet, vLocation, rotation, spawnParams);
-			Spawned->SetHeading(LocalPos);
-
-			iDelay = 50;
-		}
-	}
-
 	if (iState == STATE_BATTLE)
 	{
-		if (bWeapon1)
+		if ((bWeapon1) || (bWeapon2) || (bWeapon3))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Weapon 1"));
-		}
-		else if (bWeapon2)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Weapon 2"));
-		}
-		else if (bWeapon3)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Weapon 3"));
+			//UE_LOG(LogTemp, Warning, TEXT("Weapons"));
+			if (Bullet != NULL) {
+				UWorld* const World = GetWorld();
+
+				if ((World) && (iDelay<=0)) {
+					FActorSpawnParameters spawnParams;
+					spawnParams.Owner = this;
+					spawnParams.Instigator = Instigator;
+						
+					FVector vLocation = this->GetActorLocation() + FVector(0.f, 0.f, 0.f);
+		
+					FRotator rotation;
+					rotation.Yaw = 0.0f;
+					rotation.Pitch = 0.0f;
+					rotation.Roll = 0.0f;
+
+					ABullet_Pawn* const Spawned = World->SpawnActor<ABullet_Pawn>(Bullet, vLocation, rotation, spawnParams);
+					Spawned->SetHeading(LocalPos);
+					Spawned->SetWeapons(bWeapon1, bWeapon2, bWeapon3);
+
+					iDelay = 50;
+				}
+			}
 		}
 		else
 		{
 			UE_LOG(LogTemp, Warning, TEXT("No Weapon"));
 		}
-		//Shoot a projectile
-		//Get a projectile, and pass the angle of the player
-		//So the projectile can shoot in that angle
-		//Also pass the current weapon selected
-		//Then reset weapon states
-
-		//Later on, can mix multiple weapons
 	}
 }
 

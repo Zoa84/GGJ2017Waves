@@ -28,15 +28,20 @@ public:
 
 	void SetHeading(FVector f);
 
+	void SetWeapons(bool b1, bool b2, bool b3);
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Bullet", meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* BulletMesh;
 
-
-
 	float fSpeed;
-	float fAngle;
 	int iType;
 	FVector vHeading;
-	
+	bool bWeapon1;
+	bool bWeapon2;
+	bool bWeapon3;
+
+	ConstructorHelpers::FObjectFinder <UMaterialInterface>* Material_Red;
+	ConstructorHelpers::FObjectFinder <UMaterialInterface>* Material_Green;
+	ConstructorHelpers::FObjectFinder <UMaterialInterface>* Material_Blue;
 };

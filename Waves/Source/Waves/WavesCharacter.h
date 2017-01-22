@@ -37,7 +37,7 @@ private:
 	/** Look at mouse position*/
 	void LookAt();
 
-
+	/** Delay till next shot */
 	int iDelay;
 
 protected:
@@ -87,7 +87,4 @@ public:
 	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-
-	/** Return Angle of character */
-	FVector GetAngle() { return LocalPos; };
 };
