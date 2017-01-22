@@ -1,6 +1,7 @@
 // Copyright 1998-2016 Epic Games, Inc. All Rights Reserved.
 
 #include "Waves.h"
+#include "Bullet_Pawn.h"
 #include "WavesCharacter.h"
 
 #define TO_RADIANS	3.14159 / 180
@@ -53,6 +54,7 @@ AWavesCharacter::AWavesCharacter()
 	bWeapon1 = false;
 	bWeapon2 = false;
 	bWeapon3 = false;
+	iDelay = 0;
 	//Try to show mouse
 	//PlayerController->bShowMouseCursor = true;
 	//PlayerController->bEnableClickEvents = true;
@@ -120,6 +122,7 @@ void AWavesCharacter::Tick(float DeltaTime)
 	{
 
 	}
+	iDelay--;
 }
 
 //Look at mouse position
@@ -140,7 +143,7 @@ void AWavesCharacter::LookAt()
 	}
 	else
 	{
-		FVector LocalPos = FVector(MousePosition.X - (ViewportSize.X / 2), MousePosition.Y - (ViewportSize.Y / 2), 0.f);
+		LocalPos = FVector(MousePosition.X - (ViewportSize.X / 2), MousePosition.Y - (ViewportSize.Y / 2), 0.f);
 		fAngle = (LocalPos.HeadingAngle() * TO_DEGREES) + 270.f;
 		this->SetActorRotation(FRotator(0.f, fAngle, 0.f));
 	}
@@ -158,6 +161,29 @@ void AWavesCharacter::Switch()
 
 void AWavesCharacter::Shoot()
 {
+	if (Bullet != NULL) {
+		UWorld* const World = GetWorld();
+
+		if ((World) && (iDelay<=0)) {
+
+			FActorSpawnParameters spawnParams;
+			spawnParams.Owner = this;
+			spawnParams.Instigator = Instigator;
+
+			FVector vLocation = this->GetActorLocation() + FVector(0.f, 0.f, 0.f);
+
+			FRotator rotation;
+			rotation.Yaw = 0.0f;
+			rotation.Pitch = 0.0f;
+			rotation.Roll = 0.0f;
+
+			ABullet_Pawn* const Spawned = World->SpawnActor<ABullet_Pawn>(Bullet, vLocation, rotation, spawnParams);
+			Spawned->SetHeading(LocalPos);
+
+			iDelay = 50;
+		}
+	}
+
 	if (iState == STATE_BATTLE)
 	{
 		if (bWeapon1)
