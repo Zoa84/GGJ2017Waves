@@ -21,10 +21,21 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
+
+	void TakeDamage(int damage);
+
+	bool isDead();
 private:
 	//! Calculate heading for moving towards specified position
 	FVector calcHeading(FVector target);
 	
 	//! Speed of actor (as a multiplier)
+	UPROPERTY(EditAnywhere, Category = "Enemy")
 	float fSpeed;
+	UPROPERTY(EditAnywhere, Category = "Enemy")
+	FString sType;
+	UPROPERTY(EditAnywhere, Category = "Enemy")
+	int iHealth;
+
+	bool bDead;
 };

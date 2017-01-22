@@ -13,15 +13,17 @@ AEnemyCharacter::AEnemyCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	fSpeed = 0.5f;
-
+	//Default values
+	fSpeed = 1.0f;
+	sType = "Red";
+	iHealth = 1;
+	bDead = false;
 }
 
 // Called when the game starts or when spawned
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -39,6 +41,11 @@ void AEnemyCharacter::Tick( float DeltaTime )
 	float fAngle = vHeading.HeadingAngle() * TO_DEGREES;
 	//UE_LOG(LogTemp, Warning, TEXT("Angle: %f"), fAngle);
 	this->SetActorRotation(FRotator(0.f, fAngle, 0.f));
+
+	if (bDead) this->Destroy();
+
+	//Check if dead
+	if (iHealth <= 0) bDead = true;
 }
 
 // Called to bind functionality to input
@@ -62,3 +69,11 @@ FVector AEnemyCharacter::calcHeading(FVector target)
 	return vHeading;
 }
 
+
+void AEnemyCharacter::TakeDamage(int damage) {
+	iHealth -= damage;
+}
+
+bool AEnemyCharacter::isDead() {
+	return bDead;
+}
