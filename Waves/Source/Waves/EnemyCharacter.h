@@ -11,7 +11,7 @@ class WAVES_API AEnemyCharacter : public ACharacter
 	GENERATED_BODY()
 public:
 	// Sets default values for this character's properties
-	AEnemyCharacter();
+	//AEnemyCharacter();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -36,4 +36,9 @@ private:
 	int iHealth;
 
 	bool bDead;
+
+	UCapsuleComponent* capsuleComp;
+
+	UFUNCTION()
+		virtual void OnHit(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 };

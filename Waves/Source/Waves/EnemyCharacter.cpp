@@ -1,16 +1,26 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Waves.h"
+#include "WavesCharacter.h"
 #include "EnemyCharacter.h"
+
 
 #define TO_RADIANS	3.14159 / 180
 #define TO_DEGREES	180 / 3.14159
 
 
-// Sets default values
-AEnemyCharacter::AEnemyCharacter()
+//// Sets default values
+//AEnemyCharacter::AEnemyCharacter()
+//{
+//
+//}
+
+// Called when the game starts or when spawned
+void AEnemyCharacter::BeginPlay()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	Super::BeginPlay();
+
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	//Default values
@@ -18,12 +28,17 @@ AEnemyCharacter::AEnemyCharacter()
 	sType = "Red";
 	iHealth = 1;
 	bDead = false;
-}
 
-// Called when the game starts or when spawned
-void AEnemyCharacter::BeginPlay()
-{
-	Super::BeginPlay();
+	capsuleComp = this->GetCapsuleComponent();
+	capsuleComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	//capsuleComp->OnComponentBeginOverlap.AddDynamic(this, OnHit);
+	SetActorEnableCollision(true);
+
+	FScriptDelegate Delegate;
+	Delegate.BindUFunction(this, "OnHit");
+	OnActorHit.Add(Delegate);
+
+	capsuleComp->OnComponentHit.AddDynamic(this, &AEnemyCharacter::OnHit);
 }
 
 // Called every frame
@@ -39,7 +54,6 @@ void AEnemyCharacter::Tick( float DeltaTime )
 
 	vHeading = FVector(vHeading.X, vHeading.Y, 0.f);
 	float fAngle = vHeading.HeadingAngle() * TO_DEGREES;
-	//UE_LOG(LogTemp, Warning, TEXT("Angle: %f"), fAngle);
 	this->SetActorRotation(FRotator(0.f, fAngle, 0.f));
 
 	if (bDead) this->Destroy();
@@ -67,6 +81,14 @@ FVector AEnemyCharacter::calcHeading(FVector target)
 	vHeading.Normalize();
 
 	return vHeading;
+}
+
+void AEnemyCharacter::OnHit(AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit)
+{
+	if (OtherActor->GetClass()->IsChildOf(AWavesCharacter::StaticClass())) {
+		bDead = true;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Hit %f"), 1);
 }
 
 bool AEnemyCharacter::isDead() {
