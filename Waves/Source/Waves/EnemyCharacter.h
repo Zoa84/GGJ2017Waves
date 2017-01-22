@@ -37,6 +37,8 @@ private:
 
 	bool bDead;
 
+	void takeDamage(int damage);
+
 	UCapsuleComponent* capsuleComp;
 
 	UFUNCTION()

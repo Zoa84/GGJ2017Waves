@@ -30,6 +30,8 @@ public:
 
 	void SetWeapons(bool b1, bool b2, bool b3);
 
+	FString getWeaponType();
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Bullet", meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* BulletMesh;

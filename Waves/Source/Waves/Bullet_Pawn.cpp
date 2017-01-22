@@ -75,3 +75,17 @@ void ABullet_Pawn::SetWeapons(bool b1, bool b2, bool b3) {
 		BulletMesh->SetMaterial(0, Material_Blue->Object);
 	}
 };
+
+FString ABullet_Pawn::getWeaponType() {
+	if (bWeapon1) {
+		return "Red";
+	}
+	else if (bWeapon2) {
+		return "Green";
+	}
+	else if (bWeapon3) {
+		return "Blue";
+	}
+
+	return "";
+}

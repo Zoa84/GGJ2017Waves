@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Waves.h"
+#include "Bullet_Pawn.h"
 #include "WavesCharacter.h"
 #include "EnemyCharacter.h"
 
@@ -86,11 +87,21 @@ FVector AEnemyCharacter::calcHeading(FVector target)
 void AEnemyCharacter::OnHit(AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit)
 {
 	if (OtherActor->GetClass()->IsChildOf(AWavesCharacter::StaticClass())) {
-		bDead = true;
+		//bDead = true;
+	}
+	else if (OtherActor->GetClass()->IsChildOf(ABullet_Pawn::StaticClass())) {
+		ABullet_Pawn* bullet = static_cast<ABullet_Pawn*>(OtherActor);
+		if (bullet->getWeaponType() == this->sType) {
+			bDead = true;
+		}
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Hit %f"), 1);
 }
 
 bool AEnemyCharacter::isDead() {
 	return bDead;
+}
+
+void AEnemyCharacter::takeDamage(int damage) {
+	iHealth -= damage;
 }
