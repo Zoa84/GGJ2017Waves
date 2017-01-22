@@ -20,6 +20,9 @@ private:
 	/** Angle the player is facing */
 	float fAngle;
 
+	/** Vector of player angle */
+	FVector LocalPos;
+
 	/** Viewport Size */
 	FVector2D ViewportSize;
 
@@ -33,6 +36,9 @@ private:
 
 	/** Look at mouse position*/
 	void LookAt();
+
+
+	int iDelay;
 
 protected:
 
@@ -68,6 +74,9 @@ protected:
 	void Weapon2Off() { bWeapon2 = false; };
 	void Weapon3Off() { bWeapon3 = false; };
 
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	TSubclassOf<class ABullet_Pawn> Bullet;
+
 public:
 	AWavesCharacter();
 
@@ -78,4 +87,7 @@ public:
 	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+
+	/** Return Angle of character */
+	FVector GetAngle() { return LocalPos; };
 };
