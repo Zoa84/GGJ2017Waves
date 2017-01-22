@@ -22,8 +22,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
-	void TakeDamage(int damage);
-
 	bool isDead();
 private:
 	//! Calculate heading for moving towards specified position

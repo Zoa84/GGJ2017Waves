@@ -69,11 +69,6 @@ FVector AEnemyCharacter::calcHeading(FVector target)
 	return vHeading;
 }
 
-
-void AEnemyCharacter::TakeDamage(int damage) {
-	iHealth -= damage;
-}
-
 bool AEnemyCharacter::isDead() {
 	return bDead;
 }
