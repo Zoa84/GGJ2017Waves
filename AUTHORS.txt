@@ -1,0 +1,23 @@
+Forest Chorus
+Global Games Jam 2017 - Theme: Waves
+Group 8 of De Montfort University's Games Development Society
+
+Created in Unreal Engine 4.11.2
+
+Programming Team
+
+Rozen Savilla - 	Programmer
+Simon Chiu - 		Programmer
+
+
+Art Team
+
+Habib Uddin - 		3D Artist
+Kasparas Preisas - 	3D Artist
+Samm Steele - 		3D Artist
+Will Everett - 		3D Artist
+Corrine Rowell - 	Concept Artist
+Destiny Riedhofer - 	Texture Artist
+Leah Swain - 		Texture Artist
+Tabea Julian Roth - 	Texture Artist
+Vicki Kocan - 		Freelance Artist
