@@ -39,7 +39,7 @@ void AEnemyCharacter::BeginPlay()
 	Delegate.BindUFunction(this, "OnHit");
 	OnActorHit.Add(Delegate);
 
-	capsuleComp->OnComponentHit.AddDynamic(this, &AEnemyCharacter::OnHit);
+	//capsuleComp->OnComponentHit.AddDynamic(this, &AEnemyCharacter::OnHit);
 }
 
 // Called every frame
