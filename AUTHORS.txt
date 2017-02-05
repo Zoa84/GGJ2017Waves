@@ -2,7 +2,7 @@ Forest Chorus
 Global Games Jam 2017 - Theme: Waves
 Group 8 of De Montfort University's Games Development Society
 
-Created in Unreal Engine 4.11.2
+Created in Unreal Engine 4.13.0
 
 Programming Team
 

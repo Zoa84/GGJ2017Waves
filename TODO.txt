@@ -1,4 +1,3 @@
-Projectiles - Widen over time
 HUD - Data - Timer, Enemies left, Enemies killed
 Transitions
 Maps/levels
