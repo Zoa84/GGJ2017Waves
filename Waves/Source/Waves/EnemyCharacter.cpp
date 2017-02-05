@@ -10,11 +10,14 @@
 #define TO_DEGREES	180 / 3.14159
 
 
-//// Sets default values
-//AEnemyCharacter::AEnemyCharacter()
-//{
-//
-//}
+// Sets default values
+AEnemyCharacter::AEnemyCharacter()
+{
+	PrimaryActorTick.bCanEverTick = true;
+	Material_Red = new ConstructorHelpers::FObjectFinder <UMaterialInterface>(TEXT("Material'/Game/Assets/Material_HunterOrange.Material_HunterOrange'"));
+	Material_Green = new ConstructorHelpers::FObjectFinder <UMaterialInterface>(TEXT("Material'/Game/Assets/Texture_Tree_01.Texture_Tree_01'"));
+	Material_Blue = new ConstructorHelpers::FObjectFinder <UMaterialInterface>(TEXT("Material'/Game/Assets/Textures_Pyro.Textures_Pyro'"));
+}
 
 // Called when the game starts or when spawned
 void AEnemyCharacter::BeginPlay()
@@ -24,22 +27,52 @@ void AEnemyCharacter::BeginPlay()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	//Create static mesh component
+
 	//Default values
 	fSpeed = 1.0f;
-	sType = "Red";
+
+	//TODO Set randomly to r, g or b
+	float random = FMath::RandRange(0.f, 1.f);
+
+	if (random <= 0.33f)
+	{
+		sType = "Red";
+	}
+	else if (random <= 0.67f)
+	{
+		sType = "Green";
+	}
+	else if (random <= 1.f)
+	{
+		sType = "Blue";
+	}
+
 	iHealth = 1;
 	bDead = false;
 
 	capsuleComp = this->GetCapsuleComponent();
 	capsuleComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	//capsuleComp->OnComponentBeginOverlap.AddDynamic(this, OnHit);
 	SetActorEnableCollision(true);
 
 	FScriptDelegate Delegate;
 	Delegate.BindUFunction(this, "OnHit");
 	OnActorHit.Add(Delegate);
 
-	//capsuleComp->OnComponentHit.AddDynamic(this, &AEnemyCharacter::OnHit);
+	
+
+	if (sType == "Red")
+	{
+		this->GetMesh()->SetMaterial(0, Material_Red->Object);
+	}
+	if (sType == "Green")
+	{
+		this->GetMesh()->SetMaterial(0, Material_Green->Object);
+	}
+	if (sType == "Blue")
+	{
+		this->GetMesh()->SetMaterial(0, Material_Blue->Object);
+	}
 }
 
 // Called every frame
@@ -56,6 +89,8 @@ void AEnemyCharacter::Tick( float DeltaTime )
 	vHeading = FVector(vHeading.X, vHeading.Y, 0.f);
 	float fAngle = vHeading.HeadingAngle() * TO_DEGREES;
 	this->SetActorRotation(FRotator(0.f, fAngle, 0.f));
+
+	//UE_LOG(LogTemp, Warning, TEXT("Angle: %f"), fAngle);
 
 	if (bDead) this->Destroy();
 
@@ -91,11 +126,14 @@ void AEnemyCharacter::OnHit(AActor * OtherActor, UPrimitiveComponent * OtherComp
 	}
 	else if (OtherActor->GetClass()->IsChildOf(ABullet_Pawn::StaticClass())) {
 		ABullet_Pawn* bullet = static_cast<ABullet_Pawn*>(OtherActor);
+		UE_LOG(LogTemp, Warning, TEXT("Hit %f"), 1.f);
 		if (bullet->getWeaponType() == this->sType) {
 			bDead = true;
+			this->Destroy();
+			UE_LOG(LogTemp, Warning, TEXT("Hit %f"), 2.f);
 		}
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Hit %f"), 1);
+	
 }
 
 bool AEnemyCharacter::isDead() {

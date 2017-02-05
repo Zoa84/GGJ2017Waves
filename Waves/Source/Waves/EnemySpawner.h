@@ -28,4 +28,5 @@ private:
 
 	int iMaxEnemy;
 	int iSpawnCounter;
+	int iTimer;
 };

@@ -37,11 +37,10 @@ private:
 	class UStaticMeshComponent* BulletMesh;
 
 	float fSpeed;
-	int iType;
 	FVector vHeading;
-	bool bWeapon1;
-	bool bWeapon2;
-	bool bWeapon3;
+	
+	//The type of bullet (Red, Greeb, Blue)
+	FString sType;
 
 	ConstructorHelpers::FObjectFinder <UMaterialInterface>* Material_Red;
 	ConstructorHelpers::FObjectFinder <UMaterialInterface>* Material_Green;

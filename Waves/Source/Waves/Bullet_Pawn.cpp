@@ -18,9 +18,7 @@ ABullet_Pawn::ABullet_Pawn()
 	RootComponent = BulletMesh;
 
 	fSpeed = 5.0f;
-	bWeapon1 = false;
-	bWeapon2 = false;
-	bWeapon3 = false;
+	sType = "None";
 
 	Material_Red = new ConstructorHelpers::FObjectFinder <UMaterialInterface>(TEXT("Material'/Game/red_wave_Mat.red_wave_Mat'"));
 	Material_Green = new ConstructorHelpers::FObjectFinder <UMaterialInterface>(TEXT("Material'/Game/green_wave_Mat.green_wave_Mat'"));
@@ -58,34 +56,23 @@ void ABullet_Pawn::SetHeading(FVector f) {
 };
 
 void ABullet_Pawn::SetWeapons(bool b1, bool b2, bool b3) {
-	bWeapon1 = b1;
-	bWeapon2 = b2;
-	bWeapon3 = b3;
-
-	if (bWeapon1)
+	if (b1)
 	{
+		sType = "Red";
 		BulletMesh->SetMaterial(0, Material_Red->Object);
 	}
-	else if (bWeapon2)
+	else if (b2)
 	{
+		sType = "Green";
 		BulletMesh->SetMaterial(0, Material_Green->Object);
 	}
-	else if (bWeapon3)
+	else if (b3)
 	{
+		sType = "Blue";
 		BulletMesh->SetMaterial(0, Material_Blue->Object);
 	}
 };
 
 FString ABullet_Pawn::getWeaponType() {
-	if (bWeapon1) {
-		return "Red";
-	}
-	else if (bWeapon2) {
-		return "Green";
-	}
-	else if (bWeapon3) {
-		return "Blue";
-	}
-
-	return "";
-}
+	return sType;
+};

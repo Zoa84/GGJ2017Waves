@@ -11,7 +11,7 @@ class WAVES_API AEnemyCharacter : public ACharacter
 	GENERATED_BODY()
 public:
 	// Sets default values for this character's properties
-	//AEnemyCharacter();
+	AEnemyCharacter();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -41,6 +41,10 @@ private:
 
 	UCapsuleComponent* capsuleComp;
 
+	ConstructorHelpers::FObjectFinder <UMaterialInterface>* Material_Red;
+	ConstructorHelpers::FObjectFinder <UMaterialInterface>* Material_Green;
+	ConstructorHelpers::FObjectFinder <UMaterialInterface>* Material_Blue;
+
 	UFUNCTION()
-		virtual void OnHit(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	virtual void OnHit(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 };
