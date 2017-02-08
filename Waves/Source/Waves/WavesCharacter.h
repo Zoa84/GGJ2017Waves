@@ -77,6 +77,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 	TSubclassOf<class ABullet_Pawn> Bullet;
 
+	UPROPERTY(EditAnywhere, Category = "Player Character")
+	TSubclassOf<class ATextRenderActor> GameOver;
+
 public:
 	AWavesCharacter();
 
