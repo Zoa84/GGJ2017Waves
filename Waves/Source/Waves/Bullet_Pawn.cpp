@@ -3,6 +3,7 @@
 #include "Waves.h"
 #include "WavesCharacter.h"
 #include "Bullet_Pawn.h"
+#include "EnemyCharacter.h"
 
 #define TO_RADIANS	3.14159 / 180
 #define TO_DEGREES	180 / 3.14159
@@ -13,9 +14,17 @@ ABullet_Pawn::ABullet_Pawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	//Box Component
+	boxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
+	RootComponent = boxComponent;
+	boxComponent->InitBoxExtent(FVector(9.0f, 32.0f, 32.0f));
+	boxComponent->SetCollisionProfileName(TEXT("NoCollision"));
+	boxComponent->OnComponentBeginOverlap.AddDynamic(this, &ABullet_Pawn::OnOverlap);
+	boxComponent->OnComponentHit.AddDynamic(this, &ABullet_Pawn::OnHit);
+	
 	//Create static mesh component
 	BulletMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BulletMesh"));
-	RootComponent = BulletMesh;
+	BulletMesh->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
 	fSpeed = 5.0f;
 	sType = "None";
@@ -40,7 +49,7 @@ void ABullet_Pawn::Tick( float DeltaTime )
 	this->SetActorLocation(this->GetActorLocation() + (vHeading * fSpeed));
 	this->SetActorRotation(FRotator(0.f, vHeading.HeadingAngle() * TO_DEGREES, 0.f));
 	this->SetActorScale3D(this->GetActorScale3D() * 1.005f);
-	
+	boxComponent->SetWorldScale3D(RootComponent->GetComponentScale());
 }
 
 // Called to bind functionality to input
@@ -75,4 +84,20 @@ void ABullet_Pawn::SetWeapons(bool b1, bool b2, bool b3) {
 
 FString ABullet_Pawn::getWeaponType() {
 	return sType;
-};
+}
+void ABullet_Pawn::OnOverlap(UPrimitiveComponent * OverlappingComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("HIT"));
+	if (OtherActor->IsA(AEnemyCharacter::StaticClass())) {
+		BulletMesh->DestroyComponent();
+		this->Destroy();
+	}
+}
+
+void ABullet_Pawn::OnHit(UPrimitiveComponent * HitComp, AActor * Actor, UPrimitiveComponent * Other, FVector Impulse, const FHitResult & HitResult)
+{
+	if (Actor->IsA(AEnemyCharacter::StaticClass())) {
+		BulletMesh->DestroyComponent();
+		this->Destroy();
+	}
+}
