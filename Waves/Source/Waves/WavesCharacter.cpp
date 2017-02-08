@@ -2,6 +2,7 @@
 
 #include "Waves.h"
 #include "Bullet_Pawn.h"
+#include "Engine/TextRenderActor.h"
 #include "WavesCharacter.h"
 
 #define TO_RADIANS	3.14159 / 180
@@ -9,6 +10,8 @@
 
 #define STATE_BATTLE	1
 #define STATE_DEATH		2
+
+ATextRenderActor* tGameOver;
 
 AWavesCharacter::AWavesCharacter()
 {
@@ -54,10 +57,21 @@ AWavesCharacter::AWavesCharacter()
 	bWeapon2 = false;
 	bWeapon3 = false;
 	iDelay = 0;
-	//Try to show mouse
-	//PlayerController->bShowMouseCursor = true;
-	//PlayerController->bEnableClickEvents = true;
-	//PlayerController->bEnableMouseOverEvents = true;
+	
+	
+	
+	
+
+
+
+	APlayerController* PC = Cast<APlayerController>(GetController());
+	if (PC)
+	{
+		//Try to show mouse CURRENTLY does not work
+		PC->bShowMouseCursor = true;
+		PC->bEnableClickEvents = true;
+		PC->bEnableMouseOverEvents = true;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -81,6 +95,8 @@ void AWavesCharacter::SetupPlayerInputComponent(class UInputComponent* InputComp
 	InputComponent->BindAction("Weapon1", IE_Released, this, &AWavesCharacter::Weapon1Off);
 	InputComponent->BindAction("Weapon2", IE_Released, this, &AWavesCharacter::Weapon2Off);
 	InputComponent->BindAction("Weapon3", IE_Released, this, &AWavesCharacter::Weapon3Off);
+
+	InputComponent->BindAction("Restart", IE_Pressed, this, &AWavesCharacter::Reset);
 }
 
 void AWavesCharacter::MoveRight(float Value)
@@ -155,7 +171,42 @@ void AWavesCharacter::Switch()
 	{
 		iState = STATE_BATTLE;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("State: %i"), iState);
+
+	//If state is death, then draw game over text, and hid player. 
+	if (iState == STATE_DEATH)
+	{
+		this->SetActorHiddenInGame(true);
+
+		//tGameOver->SetActorHiddenInGame(false);
+
+		//Setup game over text
+		if (GameOver != NULL) {
+			UWorld* const World = GetWorld();
+
+			if (World) {
+				FActorSpawnParameters spawnParams;
+				spawnParams.Owner = this;
+				spawnParams.Instigator = Instigator;
+
+				FVector vLocation = this->GetActorLocation() + FVector(200.f, 0.f, 200.f);
+
+				FRotator rotation;
+				rotation.Yaw = 0.0f;
+				rotation.Pitch = 45.0f;
+				rotation.Roll = 0.0f;
+
+				tGameOver = World->SpawnActor<ATextRenderActor>(GameOver, vLocation, rotation, spawnParams);
+				tGameOver->SetActorHiddenInGame(false);
+			}
+		}
+	}
+	//If switched to battle mode, show player
+	else
+	{
+		this->SetActorHiddenInGame(false);
+
+		tGameOver->SetActorHiddenInGame(true);
+	}
 }
 
 void AWavesCharacter::Shoot()
@@ -198,4 +249,10 @@ void AWavesCharacter::Shoot()
 void AWavesCharacter::SubShoot()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Sub Weapon"));
+}
+
+void AWavesCharacter::Reset()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Reset"));
+	UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
 }
