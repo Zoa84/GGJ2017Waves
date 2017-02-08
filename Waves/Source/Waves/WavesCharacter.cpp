@@ -148,6 +148,8 @@ void AWavesCharacter::LookAt()
 
 	//Mouse positions
 	FVector2D MousePosition;
+	
+	
 
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	PlayerController->GetMousePosition(MousePosition.X, MousePosition.Y);
@@ -161,6 +163,14 @@ void AWavesCharacter::LookAt()
 		LocalPos = FVector(MousePosition.X - (ViewportSize.X / 2), MousePosition.Y - (ViewportSize.Y / 2), 0.f);
 		fAngle = (LocalPos.HeadingAngle() * TO_DEGREES) + 270.f;
 		this->SetActorRotation(FRotator(0.f, fAngle, 0.f));
+
+		//UE_LOG(LogTemp, Warning, TEXT("X: %f  Y: %f /n"), MousePosition.X, MousePosition.Y);
+
+		if ((MousePosition.X > 0) && (MousePosition.Y > 0))
+		{
+			//FCanvasItem* item = new FCanvasTileItem(FVector2D(300, 300), FVector2D(50, 50), FLinearColor(0, 0, 255, 1));
+			//GetWorld()->GetCanvasForDrawMaterialToRenderTarget()->DrawItem(*item);
+		}
 	}
 }
 
@@ -232,8 +242,11 @@ void AWavesCharacter::Shoot()
 					rotation.Roll = 0.0f;
 
 					ABullet_Pawn* const Spawned = World->SpawnActor<ABullet_Pawn>(Bullet, vLocation, rotation, spawnParams);
-					Spawned->SetHeading(LocalPos);
-					Spawned->SetWeapons(bWeapon1, bWeapon2, bWeapon3);
+					if (Spawned != NULL)
+					{
+						Spawned->SetHeading(LocalPos);
+						Spawned->SetWeapons(bWeapon1, bWeapon2, bWeapon3);
+					}
 
 					iDelay = 50;
 				}
