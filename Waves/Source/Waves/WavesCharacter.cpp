@@ -95,6 +95,8 @@ void AWavesCharacter::SetupPlayerInputComponent(class UInputComponent* InputComp
 	InputComponent->BindAction("Weapon1", IE_Released, this, &AWavesCharacter::Weapon1Off);
 	InputComponent->BindAction("Weapon2", IE_Released, this, &AWavesCharacter::Weapon2Off);
 	InputComponent->BindAction("Weapon3", IE_Released, this, &AWavesCharacter::Weapon3Off);
+
+	InputComponent->BindAction("Restart", IE_Pressed, this, &AWavesCharacter::Reset);
 }
 
 void AWavesCharacter::MoveRight(float Value)
@@ -247,4 +249,10 @@ void AWavesCharacter::Shoot()
 void AWavesCharacter::SubShoot()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Sub Weapon"));
+}
+
+void AWavesCharacter::Reset()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Reset"));
+	UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
 }

@@ -74,6 +74,9 @@ protected:
 	void Weapon2Off() { bWeapon2 = false; };
 	void Weapon3Off() { bWeapon3 = false; };
 
+	//Restart level
+	void Reset();
+
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 	TSubclassOf<class ABullet_Pawn> Bullet;
 
