@@ -10,16 +10,20 @@ AEnemySpawner::AEnemySpawner()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	iMaxEnemy = 10;
-	iSpawnCounter = 0;
-	iTimer = 60;
+	iMaxTimer = 200;
+	if (iStartTimer < 200)
+	{
+		iStartTimer = 200;
+	}
+	fMulti = 1.f;
+	iSpawnCounter = 10;
 }
 
 // Called when the game starts or when spawned
 void AEnemySpawner::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	iTimer = iStartTimer;
 }
 
 // Called every frame
@@ -27,15 +31,24 @@ void AEnemySpawner::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
-	if (iSpawnCounter < iMaxEnemy) {
-		if (iTimer <= 0)
+	if (iTimer <= 0)
+	{
+		spawn();
+		iSpawnCounter--;
+		if (iSpawnCounter == 0)
 		{
-			spawn();
-			iSpawnCounter++;
-			iTimer = 60;
+			iSpawnCounter = 10;
+			fMulti -= 0.05f;
+			if (fMulti < 0.3f)
+			{
+				fMulti = 0.3f;
+			}
 		}
-		iTimer--;
+		iTimer = iMaxTimer;
+		iTimer *= fMulti;
+		UE_LOG(LogTemp, Warning, TEXT("Till Next Time: %i"), iTimer);
 	}
+	iTimer--;
 }
 
 void AEnemySpawner::spawn() {

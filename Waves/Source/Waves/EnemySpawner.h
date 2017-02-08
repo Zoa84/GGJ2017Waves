@@ -23,10 +23,14 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 	TSubclassOf<class AEnemyCharacter> Enemy;
 
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	int iStartTimer;
+
 private:
 	void spawn();
 
-	int iMaxEnemy;
-	int iSpawnCounter;
+	int iMaxTimer;
 	int iTimer;
+	float fMulti;
+	int iSpawnCounter;
 };
