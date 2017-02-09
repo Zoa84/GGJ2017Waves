@@ -4,6 +4,7 @@
 #include "Bullet_Pawn.h"
 #include "Engine/TextRenderActor.h"
 #include "WavesCharacter.h"
+#include "EnemyCharacter.h"
 
 #define TO_RADIANS	3.14159 / 180
 #define TO_DEGREES	180 / 3.14159
@@ -17,6 +18,14 @@ AWavesCharacter::AWavesCharacter()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
+
+	//Box Component
+	boxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
+	boxComponent->InitBoxExtent(FVector(40.0f, 40.0f, 80.0f));
+	boxComponent->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
+	boxComponent->OnComponentBeginOverlap.AddDynamic(this, &AWavesCharacter::OnOverlap);
+	boxComponent->OnComponentHit.AddDynamic(this, &AWavesCharacter::OnHit);
+	boxComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
 	// Don't rotate when the controller rotates.
 	bUseControllerRotationPitch = false;
@@ -268,4 +277,23 @@ void AWavesCharacter::Reset()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Reset"));
 	UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
+}
+
+void AWavesCharacter::OnOverlap(UPrimitiveComponent * OverlappingComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	//OtherActor->Destroy();
+	if (OtherActor->IsA(AEnemyCharacter::StaticClass())) {
+
+		OtherActor->Destroy();	//Destroy Enemy
+		//Game Over
+	}
+}
+
+void AWavesCharacter::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
+{
+	////OtherActor->Destroy();
+	//if (OtherActor->IsA(AEnemyCharacter::StaticClass())) {
+	//	//AEnemyCharacter* enemy = static_cast<AEnemyCharacter*>(OtherActor);
+	//	OtherActor->Destroy();
+	//}
 }
