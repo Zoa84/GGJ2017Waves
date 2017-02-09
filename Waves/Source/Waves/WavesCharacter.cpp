@@ -286,6 +286,8 @@ void AWavesCharacter::OnOverlap(UPrimitiveComponent * OverlappingComp, AActor * 
 
 		OtherActor->Destroy();	//Destroy Enemy
 		//Game Over
+		iState = STATE_BATTLE;
+		Switch();
 	}
 }
 
