@@ -32,11 +32,6 @@ public:
 
 	FString getWeaponType();
 
-	UFUNCTION()
-		void OnOverlap(class UPrimitiveComponent* OverlappingComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	UFUNCTION()
-		void OnHit(class UPrimitiveComponent* HitComp, class AActor* Actor, class UPrimitiveComponent* Other, FVector Impulse, const FHitResult & HitResult);
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Bullet", meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* BulletMesh;
@@ -44,10 +39,17 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Bullet", meta = (AllowPrivateAccess = "true"))
 		class UBoxComponent * boxComponent;
 
+	UFUNCTION()
+		void OnOverlap(class UPrimitiveComponent* OverlappingComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+		void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+
 	float fSpeed;
 	FVector vHeading;
 	
 	//The type of bullet (Red, Greeb, Blue)
+	UPROPERTY(EditAnywhere, Category = "Enemy")
 	FString sType;
 
 	ConstructorHelpers::FObjectFinder <UMaterialInterface>* Material_Red;

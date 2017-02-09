@@ -16,17 +16,19 @@ ABullet_Pawn::ABullet_Pawn()
 
 	//Box Component
 	boxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
-	RootComponent = boxComponent;
+	
 	boxComponent->InitBoxExtent(FVector(9.0f, 32.0f, 32.0f));
-	boxComponent->SetCollisionProfileName(TEXT("NoCollision"));
+	boxComponent->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 	boxComponent->OnComponentBeginOverlap.AddDynamic(this, &ABullet_Pawn::OnOverlap);
 	boxComponent->OnComponentHit.AddDynamic(this, &ABullet_Pawn::OnHit);
+	RootComponent = boxComponent;
 	
 	//Create static mesh component
 	BulletMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BulletMesh"));
+	BulletMesh->SetCollisionProfileName(TEXT("NoCollision"));
 	BulletMesh->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
-	fSpeed = 5.0f;
+	fSpeed = 7.0f;
 	sType = "None";
 
 	Material_Red = new ConstructorHelpers::FObjectFinder <UMaterialInterface>(TEXT("Material'/Game/red_wave_Mat.red_wave_Mat'"));
@@ -49,7 +51,12 @@ void ABullet_Pawn::Tick( float DeltaTime )
 	this->SetActorLocation(this->GetActorLocation() + (vHeading * fSpeed));
 	this->SetActorRotation(FRotator(0.f, vHeading.HeadingAngle() * TO_DEGREES, 0.f));
 	this->SetActorScale3D(this->GetActorScale3D() * 1.005f);
-	boxComponent->SetWorldScale3D(RootComponent->GetComponentScale());
+	boxComponent->SetWorldScale3D(this->GetActorScale3D() * 1.005f);
+
+	//Destroy when too large
+	if (this->GetActorScale3D().X > 6.0) {
+		this->Destroy();
+	}
 }
 
 // Called to bind functionality to input
@@ -87,17 +94,17 @@ FString ABullet_Pawn::getWeaponType() {
 }
 void ABullet_Pawn::OnOverlap(UPrimitiveComponent * OverlappingComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("HIT"));
 	if (OtherActor->IsA(AEnemyCharacter::StaticClass())) {
-		BulletMesh->DestroyComponent();
-		this->Destroy();
+		AEnemyCharacter* enemy = static_cast<AEnemyCharacter*>(OtherActor);
+		//BulletMesh->DestroyComponent();
+		if (enemy->getType() == sType) {
+			OtherActor->Destroy();
+			//this->Destroy();
+		}
 	}
 }
 
-void ABullet_Pawn::OnHit(UPrimitiveComponent * HitComp, AActor * Actor, UPrimitiveComponent * Other, FVector Impulse, const FHitResult & HitResult)
+void ABullet_Pawn::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (Actor->IsA(AEnemyCharacter::StaticClass())) {
-		BulletMesh->DestroyComponent();
-		this->Destroy();
-	}
+
 }

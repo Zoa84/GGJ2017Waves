@@ -121,19 +121,18 @@ FVector AEnemyCharacter::calcHeading(FVector target)
 
 void AEnemyCharacter::OnHit(AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit)
 {
-	if (OtherActor->GetClass()->IsChildOf(AWavesCharacter::StaticClass())) {
-		//bDead = true;
-	}
-	else if (OtherActor->GetClass()->IsChildOf(ABullet_Pawn::StaticClass())) {
-		ABullet_Pawn* bullet = static_cast<ABullet_Pawn*>(OtherActor);
-		UE_LOG(LogTemp, Warning, TEXT("Hit %f"), 1.f);
-		if (bullet->getWeaponType() == this->sType) {
-			bDead = true;
-			this->Destroy();
-			UE_LOG(LogTemp, Warning, TEXT("Hit %f"), 2.f);
-		}
-	}
-	
+	//if (OtherActor->GetClass()->IsChildOf(AWavesCharacter::StaticClass())) {
+	//	//bDead = true;
+	//}
+	//else if (OtherActor->GetClass()->IsChildOf(ABullet_Pawn::StaticClass())) {
+	//	ABullet_Pawn* bullet = static_cast<ABullet_Pawn*>(OtherActor);
+	//	UE_LOG(LogTemp, Warning, TEXT("Hit %f"), 1.f);
+	//	if (bullet->getWeaponType() == this->sType) {
+	//		bDead = true;
+	//		this->Destroy();
+	//		UE_LOG(LogTemp, Warning, TEXT("Hit %f"), 2.f);
+	//	}
+	//}
 }
 
 bool AEnemyCharacter::isDead() {
@@ -142,4 +141,8 @@ bool AEnemyCharacter::isDead() {
 
 void AEnemyCharacter::takeDamage(int damage) {
 	iHealth -= damage;
+}
+
+FString AEnemyCharacter::getType() {
+	return this->sType;
 }

@@ -23,6 +23,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
 	bool isDead();
+
+	FString getType();
 private:
 	//! Calculate heading for moving towards specified position
 	FVector calcHeading(FVector target);
